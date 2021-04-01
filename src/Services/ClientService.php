@@ -18,39 +18,23 @@ class ClientService extends AbstractService
      */
     protected $repository;
 
-    /**
-     * @param string $email
-     * @param string $ip
-     * @param string|null $code
-     *
-     * @return User
-     */
-    public function create(string $email, string $ip, ?string $code = null): User
+    public function create(string $email, string $ip): User
     {
-//        $countryData = $this->getCountryData($ip);
-//
-//        $country = $this->getCountryByCode($countryData->countryCode);
-//
-//        $transaction = function () use ($email, $country, $countryData) {
-//            return $this->repository->create([
-//                'email' => $email,
-//                'status_id' => Status::ID_ACTIVE,
-//                'role_id' => Role::ID_CLIENT,
-//                'country_id' => $country->id,
-//                'timezone' => $countryData->timezone,
-//            ]);
-//        };
-//
-//        $client = $this->repository->transactionWrapper($transaction);
-//
-//        event(new ClientRegistered($client, $ip, $code));
-//
-//        return $client;
+        $transaction = function () use ($email) {
+            return $this->repository->create([
+                'email' => $email,
+                'status_id' => Status::ID_ACTIVE,
+                'role_id' => Role::ID_CLIENT,
+            ]);
+        };
+
+        $client = $this->repository->transactionWrapper($transaction);
+
+        event(new ClientRegistered($client, $ip));
+
+        return $client;
     }
 
-    /**
-     * @return string
-     */
     protected function getRepository(): string
     {
         return UserRepository::class;

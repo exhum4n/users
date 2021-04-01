@@ -17,7 +17,11 @@ class ChangeEmailRequest extends IPRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email:rfc,dns|unique:' . User::class,
+            'email' => [
+                'required',
+                'email:rfc,dns',
+                'unique:' . User::class,
+            ],
         ];
     }
 }

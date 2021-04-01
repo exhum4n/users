@@ -15,7 +15,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *
  * @property int id
  * @property int status_id
- * @property int location_id
  * @property bool is_verified
  * @property string email
  * @property Carbon created_at
@@ -32,7 +31,6 @@ class User extends AuthEntity implements JWTSubject
 
     protected $fillable = [
         'status_id',
-        'location_id',
         'is_verified',
         'email',
     ];
@@ -42,9 +40,9 @@ class User extends AuthEntity implements JWTSubject
         return $this->belongsTo(Status::class);
     }
 
-    public function location(): BelongsTo
+    public function location(): HasOne
     {
-        return $this->belongsTo(Location::class);
+        return $this->hasOne(Location::class);
     }
 
     public function credentials(): HasOne
@@ -67,8 +65,6 @@ class User extends AuthEntity implements JWTSubject
         return [
             'email' => $this->email,
             'status' => $this->status->name,
-            'current_time' => now($this->location->timezone)->format('H:i:s'),
-            'location' => $this->location,
         ];
     }
 }

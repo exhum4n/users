@@ -14,7 +14,7 @@ trait Users
     /**
      * @return User|Authenticatable|null
      */
-    public function getCurrentUser(): ?User
+    public function getCurrentUser(): ?Authenticatable
     {
         return auth()->user();
     }

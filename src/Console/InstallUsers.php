@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Exhum4n\Users\Console;
 
-use Exhum4n\Components\Console\AbstractCommand;
-use Exhum4n\Users\Database\Seeds\UserComponentsSeeder;
+use Exhum4n\Components\Console\Installer;
+use Exhum4n\Users\Database\Seeds\RolesSeeder;
+use Exhum4n\Users\Database\Seeds\StatusesSeeder;
 
-class InstallUsers extends AbstractCommand
+class InstallUsers extends Installer
 {
-    public function handle(): void
-    {
-        $this->call('migrate', ['--path' => migrations_path(static::class)]);
-        $this->call('db:seed', ['--class' => UserComponentsSeeder::class]);
-    }
+    protected $seeds = [
+        StatusesSeeder::class,
+        RolesSeeder::class,
+    ];
 
     protected function getSignature(): string
     {

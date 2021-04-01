@@ -4,45 +4,22 @@ declare(strict_types=1);
 
 namespace Exhum4n\Users\Services;
 
-use Exhum4n\Users\Exceptions\AuthorizationException;
+use Exhum4n\Users\Exceptions\AuthException;
 use Exhum4n\Users\Exceptions\UnauthorizedException;
 use Exhum4n\Users\Models\Status;
 use Exhum4n\Users\Models\User;
-use Exhum4n\Users\Repositories\AuthTokenRepository;
 use Exhum4n\Users\Traits\Clients;
+use Exhum4n\Users\Traits\Credentials;
 use Exhum4n\Users\Traits\Users;
+use Exhum4n\Users\Traits\Verifications;
+use Illuminate\Support\Facades\Hash;
 
-/**
- * Class AuthService.
- *
- * @method void setVerificationCode(string $email, int $code)
- * @method string getVerificationCode(string $email)
- * @method void deleteVerificationCode(string $email)
- */
 class AuthService
 {
     use Clients;
     use Users;
-
-    /**
-     * @var VerificationService
-     */
-    public $verifications;
-
-    /**
-     * @var AuthTokenRepository
-     */
-    protected $tokens;
-
-    /**
-     * @param VerificationService $verifications
-     * @param AuthTokenRepository $tokens
-     */
-    public function __construct(VerificationService $verifications, AuthTokenRepository $tokens)
-    {
-        $this->verifications = $verifications;
-        $this->tokens = $tokens;
-    }
+    use Verifications;
+    use Credentials;
 
     /**
      * @param string $email
@@ -51,7 +28,7 @@ class AuthService
      *
      * @return User
      *
-     * @throws AuthorizationException
+     * @throws AuthException
      */
     public function byEmail(string $email, string $ip, ?string $code = null): User
     {
@@ -59,34 +36,44 @@ class AuthService
         if (is_null($user)) {
             $user = $this->createClient($email, $ip, $code);
 
-            $this->verifications->sendAuthorizationLink($email);
+            $this->sendVerificationLink($email);
 
             return $user;
         }
 
         if ($user->status_id === Status::ID_BLOCKED) {
-            throw new AuthorizationException(trans('auth.blocked'), 403);
+            throw new AuthException('user_is_blocked');
         }
 
-        $this->verifications->sendVerificationCode($email);
+        $this->sendVerificationCode($email);
 
-        throw new AuthorizationException(trans('auth.need_confirmation'));
+        throw new AuthException('send_verification_code', 203);
+    }
+
+    public function ByToken(string $token): User
+    {
+        //
     }
 
     /**
-     * @param string $token
+     * @param string $username
+     * @param string $password
      *
      * @return User
      *
      * @throws UnauthorizedException
      */
-    public function byToken(string $token): User
+    public function byUsername(string $username, string $password): User
     {
-        $email = $this->tokens->getEmailByToken($token);
-        if (is_null($email)) {
-            throw new UnauthorizedException('Token was expired');
+        $credentials = $this->getUserCredentialsByUsername($username);
+        if (is_null($credentials)) {
+            throw new UnauthorizedException();
         }
 
-        return $this->getUserByEmail($email);
+        if (Hash::check($password, $credentials->password) === false) {
+            throw new UnauthorizedException();
+        }
+
+        return $credentials->user;
     }
 }

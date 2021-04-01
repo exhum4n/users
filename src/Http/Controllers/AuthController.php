@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Exhum4n\Users\Http\Controllers;
 
-use Exhum4n\Users\Exceptions\AuthorizationException;
-use Exhum4n\Users\Exceptions\UnauthorizedException;
 use Exhum4n\Users\Http\Presenters\TokenPresenter;
-use Exhum4n\Users\Http\Requests\AuthorizeByTokenRequest;
-use Exhum4n\Users\Http\Requests\AuthorizeRequest;
+use Exhum4n\Users\Http\Requests\AuthRequest;
 use Exhum4n\Users\Services\AuthService;
 use Exhum4n\Users\Traits\Users;
 use Exhum4n\Components\Http\Controllers\AbstractController;
@@ -23,39 +20,23 @@ class AuthController extends AbstractController
      */
     protected $service;
 
-    /**
-     * @param AuthService $service
-     */
     public function __construct(AuthService $service)
     {
         $this->service = $service;
     }
 
     /**
-     * @param AuthorizeRequest $request
+     * @param AuthRequest $request
      *
      * @return JsonResponse
-     *
-     * @throws AuthorizationException
      */
-    public function auth(AuthorizeRequest $request): JsonResponse
+    public function auth(AuthRequest $request): JsonResponse
     {
-        $user = $this->service->byEmail($request->email, $request->ip, $request->referrer_code);
+        $request->validated();
 
-        return (new TokenPresenter($user))
-            ->present();
-    }
+        $authMethod = $request->auth_method;
 
-    /**
-     * @param AuthorizeByTokenRequest $request
-     *
-     * @return JsonResponse
-     *
-     * @throws UnauthorizedException
-     */
-    public function authByToken(AuthorizeByTokenRequest $request): JsonResponse
-    {
-        $user = $this->service->byToken($request->token);
+        $user = $this->service->$authMethod($request->key);
 
         return (new TokenPresenter($user))
             ->present();

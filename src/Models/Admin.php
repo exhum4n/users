@@ -11,8 +11,6 @@ use Exhum4n\Components\Models\AbstractModel;
  *
  * @property int id
  * @property int user_id
- * @property string firstname
- * @property string lastname
  */
 class Admin extends AbstractModel
 {
@@ -20,7 +18,5 @@ class Admin extends AbstractModel
 
     protected $fillable = [
         'user_id',
-        'firstname',
-        'lastname',
     ];
 }

@@ -8,22 +8,13 @@ use Exhum4n\Users\Models\User;
 
 class TokenPresenter extends SimplePresenter
 {
-    /**
-     * @var User
-     */
     protected $user;
 
-    /**
-     * @param User $user
-     */
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return array
-     */
     protected function getPresentationData(): array
     {
         return [

@@ -15,7 +15,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string name
  * @property string value
  * @property string description
- *
  * @property User user
  */
 class Contact extends AbstractModel

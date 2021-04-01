@@ -4,48 +4,26 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('users')
-    ->name('users.')
-    ->namespace('User\Http\Controllers')
-    ->group(function () {
-        Route::get('auth', 'AuthController@auth')
-            ->name('auth');
+Route::prefix('api/{locale}')->group(function () {
 
-        Route::get('auth/{token}', 'AuthController@authByToken')
-            ->name('auth.token');
+    Route::prefix('users')
+        ->name('users.')
+        ->namespace('Exhum4n\Users\Http\Controllers')
+        ->group(function () {
 
-        Route::post('auth/fast', 'AuthController@fastAuth')
-            ->middleware('decrypt:advanced')
-            ->name('auth.fast');
+            Route::get('auth', 'AuthController@auth');
+            Route::get('auth/{token}', 'AuthController@authByToken');
+            Route::post('email/{code}', 'VerificationController@verifyEmail');
+            Route::post('confirm', 'VerificationController@verifyCode');
 
-        Route::post('email/{code}', 'VerificationController@verifyEmail')
-            ->name('email.confirm');
+            Route::middleware('auth')
+                ->group(function () {
 
-        Route::post('confirm', 'VerificationController@verifyCode')
-            ->name('confirm');
+                    Route::put('email', 'UserController@changeEmail')
+                        ->name('email.change');
 
-        Route::prefix('subscription')
-            ->name('subscription.')
-            ->group(function () {
-                Route::options('/', 'SubscriptionController@check')
-                    ->middleware('decrypt:advanced')
-                    ->name('check');
-
-                Route::get('special', 'SubscriptionController@special')
-                    ->name('special')
-                    ->middleware('auth');
-
-                Route::get('cancel', 'SubscriptionController@cancel')
-                    ->middleware('auth')
-                    ->name('cancel');
-            });
-
-        Route::middleware('auth')
-            ->group(function () {
-                Route::put('email', 'UserController@changeEmail')
-                    ->name('email.change');
-
-                Route::get('me', 'UserController@me')
-                    ->name('me');
-            });
-    });
+                    Route::get('me', 'UserController@me')
+                        ->name('me');
+                });
+        });
+});

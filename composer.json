@@ -6,12 +6,13 @@
         {
             "name": "Stanislav Churilov",
             "email": "exhum4n.dev@gmail.com",
-            "role": "Developer"
+            "role": "developer"
         }
     ],
     "require": {
         "php": "^7.0",
-        "exhum4n/components": "^1.0"
+        "exhum4n/components": "^1.0",
+        "tymon/jwt-auth": "^1.0"
     },
     "autoload": {
         "psr-4": {

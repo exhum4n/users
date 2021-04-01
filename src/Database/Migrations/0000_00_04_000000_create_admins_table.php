@@ -22,10 +22,6 @@ class CreateAdminsTable extends PostgresMigration
         return function (Blueprint $table): void {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
-            $table->string('firstname');
-            $table->string('lastname');
-
-            $table->unique(['firstname', 'lastname']);
 
             $table->foreign('user_id')
                 ->references('id')

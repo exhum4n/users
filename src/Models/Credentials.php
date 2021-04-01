@@ -18,23 +18,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Credentials extends AbstractModel
 {
-    /**
-     * @var string
-     */
     protected $table = 'users.credentials';
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'user_id',
         'username',
         'password',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

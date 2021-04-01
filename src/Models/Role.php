@@ -16,6 +16,9 @@ use Exhum4n\Components\Models\AbstractModel;
  */
 class Role extends AbstractModel
 {
+    public const ID_ADMIN = 1;
+    public const ID_CLIENT = 2;
+
     protected $table = 'users.roles';
 
     protected $fillable = [
