@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('api/{locale}')->group(function () {
+Route::prefix('api')->group(function () {
 
     Route::prefix('users')
         ->name('users.')
@@ -13,7 +13,7 @@ Route::prefix('api/{locale}')->group(function () {
 
             Route::get('auth', 'AuthController@auth');
             Route::get('auth/{token}', 'AuthController@authByToken');
-            Route::post('email/{code}', 'VerificationController@verifyEmail');
+            Route::get('email/{code}', 'VerificationController@verifyEmail');
             Route::post('confirm', 'VerificationController@verifyCode');
 
             Route::middleware('auth')
