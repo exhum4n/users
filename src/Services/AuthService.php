@@ -8,7 +8,6 @@ use Exhum4n\Users\Exceptions\AuthException;
 use Exhum4n\Users\Exceptions\UnauthorizedException;
 use Exhum4n\Users\Models\Status;
 use Exhum4n\Users\Models\User;
-use Exhum4n\Users\Traits\Clients;
 use Exhum4n\Users\Traits\Credentials;
 use Exhum4n\Users\Traits\Users;
 use Exhum4n\Users\Traits\Verifications;
@@ -16,7 +15,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
-    use Clients;
     use Users;
     use Verifications;
     use Credentials;
@@ -24,17 +22,17 @@ class AuthService
     /**
      * @param string $email
      * @param string $ip
-     * @param string|null $code
      *
      * @return User
      *
      * @throws AuthException
      */
-    public function byEmail(string $email, string $ip, ?string $code = null): User
+    public function byEmail(string $email, string $ip): User
     {
         $user = $this->getUserByEmail($email);
+
         if (is_null($user)) {
-            $user = $this->createClient($email, $ip, $code);
+            $user = $this->createUser($email, $ip);
 
             $this->sendVerificationLink($email);
 
@@ -43,6 +41,12 @@ class AuthService
 
         if ($user->status_id === Status::ID_BLOCKED) {
             throw new AuthException('user_is_blocked');
+        }
+
+        if ($user->is_verified === false) {
+            $this->sendVerificationLink($email);
+
+            throw new AuthException('email_verification_required', 403);
         }
 
         $this->sendVerificationCode($email);

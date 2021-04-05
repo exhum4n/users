@@ -8,50 +8,40 @@ use Exhum4n\Users\Http\Presenters\ChangeEmailPresenter;
 use Exhum4n\Users\Http\Presenters\UserPresenter;
 use Exhum4n\Users\Http\Requests\ChangeEmailRequest;
 use Exhum4n\Users\Services\UserService;
-use Exhum4n\Users\Traits\Users;
 use Exhum4n\Components\Http\Controllers\AbstractController;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UserController extends AbstractController
 {
-    use Users;
-
     /**
      * @var UserService
      */
     protected $service;
 
-    /**
-     * @param UserService $service
-     */
     public function __construct(UserService $service)
     {
         $this->service = $service;
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function me(): JsonResponse
+    public function current(Request $request): JsonResponse
     {
-        $user = $this->service->getCurrentUser();
+        auth()->user();
 
-        return (new UserPresenter($user))
+        $user = $request->user();
+
+        return app(UserPresenter::class, ['user' => $user])
             ->present();
     }
 
-    /**
-     * @param ChangeEmailRequest $request
-     *
-     * @return JsonResponse
-     */
     public function changeEmail(ChangeEmailRequest $request): JsonResponse
     {
-        $user = $this->getCurrentUser();
+        $this->service->changeEmail(
+            $request->user(),
+            $request->email
+        );
 
-        $this->service->changeEmail($user, $request->email);
-
-        return (new ChangeEmailPresenter())
+        return app(ChangeEmailPresenter::class)
             ->present();
     }
 }

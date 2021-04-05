@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Exhum4n\Users\Services;
 
+use Exhum4n\Users\Events\UserRegistered;
+use Exhum4n\Users\Models\Status;
 use Exhum4n\Users\Repositories\UserRepository;
-use Exhum4n\Users\Traits\Roles;
 use Exhum4n\Users\Traits\Verifications;
 use Exhum4n\Users\Models\User;
 use Exhum4n\Components\Services\AbstractService;
@@ -28,12 +29,23 @@ use Illuminate\Support\Collection;
 class UserService extends AbstractService
 {
     use Verifications;
-    use Roles;
 
     /**
      * @var UserRepository
      */
     protected $repository;
+
+    public function create(string $email, ?string $ip = null): User
+    {
+        $user = $this->repository->create([
+            'email' => $email,
+            'status_id' => Status::ID_ACTIVE,
+        ]);
+
+        event(new UserRegistered($user, $ip));
+
+        return $user;
+    }
 
     /**
      * @param User $user

@@ -9,22 +9,10 @@ use Illuminate\Mail\Mailable;
 
 class VerificationLinkMail extends AbstractMail
 {
-    /**
-     * @var string
-     */
-    protected $code;
 
-    /**
-     * @var string
-     */
+    protected $code;
     protected $email;
 
-    /**
-     * Create a new message instance.
-     *
-     * @param string $email
-     * @param string $code
-     */
     public function __construct(string $email, string $code)
     {
         parent::__construct();
@@ -35,15 +23,9 @@ class VerificationLinkMail extends AbstractMail
         $this->subject = trans('email.verification_email.subject');
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build(): Mailable
     {
-        $link = route('web.users.email.confirm', [
-            'locale' => app()->getLocale(),
+        $link = route('users.email.confirm', [
             'email' => $this->email,
             'code' => $this->code,
         ]);

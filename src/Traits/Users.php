@@ -7,18 +7,9 @@ namespace Exhum4n\Users\Traits;
 use Exhum4n\Users\Models\User;
 use Exhum4n\Users\Repositories\UserRepository;
 use Exhum4n\Users\Services\UserService;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 trait Users
 {
-    /**
-     * @return User|Authenticatable|null
-     */
-    public function getCurrentUser(): ?Authenticatable
-    {
-        return auth()->user();
-    }
-
     public function getUserById(int $userId): ?User
     {
         return app(UserRepository::class)
@@ -39,8 +30,14 @@ trait Users
 
     public function setUserIsVerified(User $user): void
     {
-        app(UserService::class)->update($user, [
+        app(UserRepository::class)->update($user, [
             'is_verified' => true,
         ]);
+    }
+
+    public function createUser(string $email, ?string $ip = null): User
+    {
+        return app(UserService::class)
+            ->create($email, $ip);
     }
 }

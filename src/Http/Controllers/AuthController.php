@@ -7,14 +7,11 @@ namespace Exhum4n\Users\Http\Controllers;
 use Exhum4n\Users\Http\Presenters\TokenPresenter;
 use Exhum4n\Users\Http\Requests\AuthRequest;
 use Exhum4n\Users\Services\AuthService;
-use Exhum4n\Users\Traits\Users;
 use Exhum4n\Components\Http\Controllers\AbstractController;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends AbstractController
 {
-    use Users;
-
     /**
      * @var AuthService
      */
@@ -25,20 +22,16 @@ class AuthController extends AbstractController
         $this->service = $service;
     }
 
-    /**
-     * @param AuthRequest $request
-     *
-     * @return JsonResponse
-     */
     public function auth(AuthRequest $request): JsonResponse
     {
-        $request->validated();
+        $validated = $request->validated();
 
-        $authMethod = $request->auth_method;
+        $authMethod = key($validated);
+        $key = $validated[$authMethod];
 
-        $user = $this->service->$authMethod($request->key);
+        $user = $this->service->$authMethod($key, $request->ip);
 
-        return (new TokenPresenter($user))
+        return app(TokenPresenter::class, ['user' => $user])
             ->present();
     }
 }

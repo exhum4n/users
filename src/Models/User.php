@@ -20,7 +20,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property Status status
- * @property Location location
  * @property Credentials credentials
  */
 class User extends AuthEntity implements JWTSubject
@@ -40,11 +39,6 @@ class User extends AuthEntity implements JWTSubject
         return $this->belongsTo(Status::class);
     }
 
-    public function location(): HasOne
-    {
-        return $this->hasOne(Location::class);
-    }
-
     public function credentials(): HasOne
     {
         return $this->hasOne(Credentials::class);
@@ -58,13 +52,5 @@ class User extends AuthEntity implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'email' => $this->email,
-            'status' => $this->status->name,
-        ];
     }
 }
