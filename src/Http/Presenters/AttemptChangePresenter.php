@@ -6,7 +6,7 @@ namespace Exhum4n\Users\Http\Presenters;
 
 use Exhum4n\Components\Http\Presenters\SimplePresenter;
 
-class ChangeEmailPresenter extends SimplePresenter
+class AttemptChangePresenter extends SimplePresenter
 {
     /**
      * @return array
@@ -14,7 +14,7 @@ class ChangeEmailPresenter extends SimplePresenter
     protected function getPresentationData(): array
     {
         return [
-            'message' => 'Email was changed',
+            'message' => 'Email verification code was sent on your email.',
         ];
     }
 }

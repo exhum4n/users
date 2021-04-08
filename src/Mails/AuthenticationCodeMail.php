@@ -7,7 +7,7 @@ namespace Exhum4n\Users\Mails;
 use Exhum4n\Components\Mails\AbstractMail;
 use Illuminate\Mail\Mailable;
 
-class VerificationCodeMail extends AbstractMail
+class AuthenticationCodeMail extends AbstractMail
 {
     /**
      * @var string
@@ -24,8 +24,6 @@ class VerificationCodeMail extends AbstractMail
         parent::__construct();
 
         $this->code = $code;
-
-        $this->subject = trans('email.confirm_code_email.subject');
     }
 
     /**
@@ -35,7 +33,9 @@ class VerificationCodeMail extends AbstractMail
      */
     public function build(): Mailable
     {
-        return $this->view('emails.verificationCode')
-            ->with(['code' => $this->code]);
+        return $this->view('emails.authentication_code')
+            ->with([
+                'code' => $this->code
+            ]);
     }
 }

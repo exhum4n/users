@@ -9,6 +9,9 @@ use Exhum4n\Users\Models\Status;
 
 class StatusRepository extends AbstractRepository
 {
+    /**
+     * @return string
+     */
     protected function getModel(): string
     {
         return Status::class;

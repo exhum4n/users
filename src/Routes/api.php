@@ -9,14 +9,29 @@ Route::prefix('users')
     ->namespace('Exhum4n\Users\Http\Controllers')
     ->group(function () {
 
-        Route::get('auth', 'AuthController@auth');
-        Route::get('auth/{token}', 'AuthController@authByToken');
-        Route::post('confirm', 'ConfirmController@verifyCode');
-
         Route::middleware('auth')
             ->group(function () {
+                Route::get('current', 'UserController@current')
+                    ->name('current');
+            });
 
-                Route::patch('email', 'UserController@changeEmail');
-                Route::get('current', 'UserController@current');
+        Route::prefix('auth')
+            ->name('auth.')
+            ->group(function () {
+                Route::get('/', 'AuthController@auth');
+                Route::post('confirm', 'AuthController@confirm')
+                    ->name('confirm');
+            });
+
+        Route::prefix('email')
+            ->name('email.')
+            ->group(function () {
+                Route::middleware('auth')
+                    ->group(function () {
+                        Route::patch('/', 'EmailController@attemptChange')
+                            ->name('attempt.change');
+                        Route::put('/', 'EmailController@confirmChange')
+                            ->name('confirm.change');
+                    });
             });
     });

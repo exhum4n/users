@@ -10,26 +10,40 @@ use Exhum4n\Users\Console\UninstallUsers;
 
 class UsersServiceProvider extends AbstractProvider
 {
+    /**
+     * {@inheritDoc}
+     */
     public function register(): void
     {
         $this->registerInstallCommands();
         $this->registerUninstallCommands();
 
-        $this->commands('exhum4n.users.install');
-        $this->commands('exhum4n.users.uninstall');
+        $this->registerViews('emails', 'emails');
+
+        $this->mergeConfigs('auth');
     }
 
-    protected function registerInstallCommands(): void
+    /**
+     * Register install command
+     */
+    private function registerInstallCommands(): void
     {
-        $this->app->singleton('exhum4n.users.install', function () {
-            return new InstallUsers();
-        });
+        $name = 'exhum4n.users.install';
+
+        $this->registerCommand($name, InstallUsers::class);
+
+        $this->commands($name);
     }
 
-    protected function registerUninstallCommands(): void
+    /**
+     * Register uninstall command
+     */
+    private function registerUninstallCommands(): void
     {
-        $this->app->singleton('exhum4n.users.uninstall', function () {
-            return new UninstallUsers();
-        });
+        $name = 'exhum4n.users.uninstall';
+
+        $this->registerCommand($name, UninstallUsers::class);
+
+        $this->commands($name);
     }
 }

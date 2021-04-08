@@ -8,11 +8,12 @@ use Exhum4n\Users\Models\User;
 use Exhum4n\Components\Http\Requests\IPRequest;
 
 /**
- * Class ChangeEmailRequest.
+ * Class ConfirmEmailChangeRequest.
  *
+ * @property int $code
  * @property string $email
  */
-class ChangeEmailRequest extends IPRequest
+class ConfirmEmailChangeRequest extends IPRequest
 {
     /**
      * @return string[][]
@@ -20,6 +21,10 @@ class ChangeEmailRequest extends IPRequest
     public function rules(): array
     {
         return [
+            'code' => [
+                'required',
+                'integer'
+            ],
             'email' => [
                 'required',
                 'email:rfc,dns',

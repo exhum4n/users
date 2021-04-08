@@ -9,28 +9,43 @@ use Illuminate\Mail\Mailable;
 
 class VerificationLinkMail extends AbstractMail
 {
+    /**
+     * @var string
+     */
+    protected $token;
 
-    protected $code;
+    /**
+     * @var string
+     */
     protected $email;
 
-    public function __construct(string $email, string $code)
+    /**
+     * VerificationLinkMail constructor.
+     *
+     * @param string $email
+     * @param string $token
+     */
+    public function __construct(string $email, string $token)
     {
         parent::__construct();
 
         $this->email = $email;
-        $this->code = $code;
-
-        $this->subject = trans('email.verification_email.subject');
+        $this->token = $token;
     }
 
+    /**
+     * @return Mailable
+     */
     public function build(): Mailable
     {
-        $link = route('users.email.confirm', [
+        $link = route('web.users.email.verify', [
             'email' => $this->email,
-            'code' => $this->code,
+            'token' => $this->token,
         ]);
 
-        return $this->view('emails.verificationLink')
-            ->with(['link' => $link]);
+        return $this->view('emails.verification_link')
+            ->with([
+                'link' => $link
+            ]);
     }
 }

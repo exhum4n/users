@@ -6,7 +6,6 @@ namespace Exhum4n\Users\Repositories;
 
 use Exhum4n\Users\Models\User;
 use Exhum4n\Components\Repositories\AbstractRepository;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -43,37 +42,6 @@ class UserRepository extends AbstractRepository
     }
 
     /**
-     * @param int|null $perPage
-     * @param array|null $filters
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getPaginated(?int $perPage = null, ?array $filters = null): LengthAwarePaginator
-    {
-        $query = $this->getQuery();
-
-        if (isset($filters['email'])) {
-            $query->where('email', 'LIKE', "%{$filters['email']}%");
-        }
-
-        if (isset($filters['role_id'])) {
-            $query->where('role_id', '=', $filters['role_id']);
-        }
-
-        if (isset($filters['subscription_id'])) {
-            $query->join('users.subscriptions', 'user_id', '=', 'users.id')
-                ->where('subscriptions.subscription_id', '=', $filters['subscription_id']);
-        }
-
-        if (isset($filters['strategy_id'])) {
-            $query->join('strategies.queues', 'user_id', '=', 'users.id')
-                ->where('queues.strategy_id', '=', $filters['strategy_id']);
-        }
-
-        return $query->paginate($perPage);
-    }
-
-    /**
      * @param string $email
      * @param int|null $count
      *
@@ -96,6 +64,6 @@ class UserRepository extends AbstractRepository
      */
     protected function getModel(): string
     {
-        return User::class;
+        return config('auth.providers.users.model');
     }
 }

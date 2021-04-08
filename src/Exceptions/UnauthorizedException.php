@@ -9,7 +9,7 @@ use Throwable;
 
 class UnauthorizedException extends Exception
 {
-    public function __construct($message = '', Throwable $previous = null)
+    public function __construct($message = 'Unauthorized', Throwable $previous = null)
     {
         parent::__construct($message, 401, $previous);
     }

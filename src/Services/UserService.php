@@ -4,38 +4,41 @@ declare(strict_types=1);
 
 namespace Exhum4n\Users\Services;
 
+use Exhum4n\Components\Models\AuthEntity;
 use Exhum4n\Users\Events\UserRegistered;
 use Exhum4n\Users\Models\Status;
 use Exhum4n\Users\Repositories\UserRepository;
-use Exhum4n\Users\Traits\Verifications;
+use Exhum4n\Users\Emails\Emails;
 use Exhum4n\Users\Models\User;
 use Exhum4n\Components\Services\AbstractService;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 /**
  * Class UserService.
  *
- * @method User|null getById(int $userId)
- * @method User|null getByEmail(string $email)
- * @method User|null getByUsername(string $username)
- * @method Collection findByEmail(string $email, ?int $count = null)
- * @method User[]|Collection getAll()
+ * @method AuthEntity|User|null getById(int $userId)
+ * @method AuthEntity|User|null getByEmail(string $email)
+ * @method AuthEntity|User|null getByUsername(string $username)
+ * @method AuthEntity|User[]|Collection getAll()
  * @method void update(User $user, array $data)
- * @method LengthAwarePaginator getPaginated(?int $perPage = null, ?array $filters = null)
  */
 class UserService extends AbstractService
 {
-    use Verifications;
+    use Emails;
 
     /**
      * @var UserRepository
      */
     protected $repository;
 
-    public function create(string $email, ?string $ip = null): User
+    /**
+     * @param string $email
+     * @param string|null $ip
+     *
+     * @return AuthEntity|User
+     */
+    public function create(string $email, ?string $ip = null): AuthEntity
     {
         $user = $this->repository->create([
             'email' => $email,
@@ -50,7 +53,7 @@ class UserService extends AbstractService
     /**
      * @param User $user
      *
-     * @return User|Model
+     * @return AuthEntity|User|Model
      */
     public function setVerified(User $user): User
     {
@@ -60,28 +63,8 @@ class UserService extends AbstractService
     }
 
     /**
-     * @return User|Authenticatable
+     * @return string
      */
-    public function getCurrentUser(): User
-    {
-        return auth()->user();
-    }
-
-    public function changeEmail(User $user, string $email): User
-    {
-        if ($user->is_verified) {
-            return $user;
-        }
-
-        $this->update($user, [
-            'email' => $email,
-        ]);
-
-        $this->sendVerificationLink($email);
-
-        return $user;
-    }
-
     protected function getRepository(): string
     {
         return UserRepository::class;
