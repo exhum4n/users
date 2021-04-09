@@ -11,17 +11,14 @@
     ],
     "require": {
         "php": "^7.0",
-        "exhum4n/components": "^1.0",
+        "exhum4n/components": "^1.1",
         "tymon/jwt-auth": "^1.0",
         "predis/predis": "^1.1"
     },
     "autoload": {
         "psr-4": {
             "Exhum4n\\Users\\": "src/"
-        },
-        "classmap": [
-            "Database/Migrations"
-        ]
+        }
     },
     "extra": {
         "laravel": {
