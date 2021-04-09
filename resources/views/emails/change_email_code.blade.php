@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>Email change code</title>
+    <title>Email change request</title>
 </head>
 <body>
-<div>Email change code - <strong>{{ $code }}</strong></div>
+<div>Use this code to verify email changing - <strong>{{ $code }}</strong></div>
 </body>
 </html>

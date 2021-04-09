@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <title>Authentication code</title>
+    <title>Email verification</title>
 </head>
 <body>
-<div>Authentication code - <strong>{{ $code }}</strong></div>
+<div>Click to this link for verify your email - <strong>{{ $link }}</strong></div>
 </body>
 </html>
