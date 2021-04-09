@@ -18,7 +18,7 @@
     "autoload": {
         "psr-4": {
             "Exhum4n\\Users\\": "src/"
-        },
+        }
     },
     "extra": {
         "laravel": {
