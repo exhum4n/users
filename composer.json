@@ -19,9 +19,6 @@
         "psr-4": {
             "Exhum4n\\Users\\": "src/"
         },
-        "classmap": [
-            "Database/Migrations"
-        ]
     },
     "extra": {
         "laravel": {
