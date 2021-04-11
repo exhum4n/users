@@ -7,6 +7,7 @@ namespace Exhum4n\Users\Http\Controllers;
 use Exhum4n\Users\Http\Presenters\UserPresenter;
 use Exhum4n\Users\Services\UserService;
 use Exhum4n\Components\Http\Controllers\AbstractController;
+use Exhum4n\Whois\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
