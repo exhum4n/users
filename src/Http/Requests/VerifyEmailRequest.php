@@ -16,20 +16,6 @@ use Exhum4n\Users\Models\User;
 class VerifyEmailRequest extends AbstractRequest
 {
     /**
-     * @param null $keys
-     *
-     * @return array
-     */
-    public function all($keys = null): array
-    {
-        $data = parent::all($keys);
-
-        $data['token'] = $this->route('token');
-
-        return $data;
-    }
-
-    /**
      * @return string[]
      */
     public function rules(): array

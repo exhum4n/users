@@ -9,6 +9,6 @@ Route::prefix('users')
     ->namespace('Exhum4n\Users\Http\Controllers')
     ->group(function () {
 
-        Route::get('email/{token}', 'EmailController@verify')
+        Route::get('email/verify', 'EmailController@verify')
             ->name('email.verify');
     });

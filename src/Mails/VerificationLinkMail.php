@@ -38,14 +38,16 @@ class VerificationLinkMail extends AbstractMail
      */
     public function build(): Mailable
     {
-        $link = route('web.users.email.verify', [
+        $frontendRoute = config('auth.verification_callback_url');
+
+        $query = http_build_query([
             'email' => $this->email,
             'token' => $this->token,
         ]);
 
         return $this->view('emails.verification_link')
             ->with([
-                'link' => $link
+                'link' => "{$frontendRoute}?{$query}"
             ]);
     }
 }
