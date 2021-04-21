@@ -68,12 +68,6 @@ class AuthService
             throw new AuthException('user_is_blocked');
         }
 
-        if ($user->is_verified === false) {
-            $this->sendVerificationEmail($email);
-
-            throw new AuthException('email_verification_required', 403);
-        }
-
         $this->sendCode($email);
 
         throw new AuthException('verification_code_sent', 203);

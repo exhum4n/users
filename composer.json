@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": "^7.3",
-        "exhum4n/components": "dev-main",
+        "exhum4n/components": "^1.0",
         "tymon/jwt-auth": "^1.0",
         "predis/predis": "^1.1"
     },
