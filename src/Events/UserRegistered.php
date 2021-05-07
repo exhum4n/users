@@ -23,9 +23,9 @@ class UserRegistered
      * UserRegistered constructor
      *.
      * @param AuthEntity $user
-     * @param string|null $ip
+     * @param string $ip
      */
-    public function __construct(AuthEntity $user, ?string $ip = null)
+    public function __construct(AuthEntity $user, string $ip = '127.0.0.1')
     {
         $this->user = $user;
         $this->ip = $ip;
