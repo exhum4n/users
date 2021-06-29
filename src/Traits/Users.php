@@ -34,17 +34,6 @@ trait Users
     }
 
     /**
-     * @param string $username
-     *
-     * @return AuthEntity|User|null
-     */
-    public function getUserByUsername(string $username): ?AuthEntity
-    {
-        return app(UserRepository::class)
-            ->getByUsername($username);
-    }
-
-    /**
      * @param User $user
      */
     public function setUserIsVerified(User $user): void

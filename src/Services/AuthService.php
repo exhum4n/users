@@ -16,7 +16,6 @@ use Exhum4n\Users\Traits\Credentials;
 use Exhum4n\Users\Traits\Users;
 use Exhum4n\Users\Emails\Emails;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Hash;
 
 class AuthService
 {
@@ -71,28 +70,6 @@ class AuthService
         $this->sendCode($email);
 
         throw new AuthException('verification_code_sent', 203);
-    }
-
-    /**
-     * @param string $username
-     * @param string $password
-     *
-     * @return AuthEntity|User
-     *
-     * @throws UnauthorizedException
-     */
-    public function byUsername(string $username, string $password): AuthEntity
-    {
-        $credentials = $this->getUserCredentialsByUsername($username);
-        if (is_null($credentials)) {
-            throw new UnauthorizedException();
-        }
-
-        if (Hash::check($password, $credentials->password) === false) {
-            throw new UnauthorizedException();
-        }
-
-        return $credentials->user;
     }
 
     /**

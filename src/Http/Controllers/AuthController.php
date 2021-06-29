@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Exhum4n\Users\Http\Controllers;
 
+use Exhum4n\Users\Exceptions\AuthException;
 use Exhum4n\Users\Exceptions\UnauthorizedException;
 use Exhum4n\Users\Http\Presenters\TokenPresenter;
 use Exhum4n\Users\Http\Requests\AuthRequest;
@@ -36,16 +37,13 @@ class AuthController extends AbstractController
      * @param AuthRequest $request
      *
      * @return JsonResponse
+     *
+     * @throws AuthException
      */
     public function auth(AuthRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-
-        $authMethod = key($validated);
-        $key = $validated[$authMethod];
-
         return app(TokenPresenter::class, [
-            'user' => $this->service->$authMethod($key, $request->ip)
+            'user' => $this->service->byEmail($request->email, $request->ip)
         ])->present();
     }
 
